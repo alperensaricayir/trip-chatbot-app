@@ -19,7 +19,14 @@ export function ChatHeader({
   async function checkAi() {
     setAiStatus("idle");
     try {
-      const res = await fetch("/api/hf", { method: "GET" });
+      const storedKey = localStorage.getItem("hf_api_key");
+      const headers: Record<string, string> = {};
+      if (storedKey) headers["x-hf-key"] = storedKey;
+
+      const res = await fetch("/api/hf", {
+        method: "GET",
+        headers
+      });
       const data = await res.json();
       setAiStatus(data.ok ? "ok" : "fail");
     } catch {
