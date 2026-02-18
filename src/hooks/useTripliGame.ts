@@ -18,11 +18,11 @@ import { loadHighScore, saveHighScore } from "@/lib/storage";
 
 type Action =
   | {
-      type: "INIT";
-      personaId: PersonaId;
-      difficultyId: string | null | undefined;
-      highScore: number;
-    }
+    type: "INIT";
+    personaId: PersonaId;
+    difficultyId: string | null | undefined;
+    highScore: number;
+  }
   | { type: "USER_REPLY"; text: string; kind: ReplyKind }
   | { type: "USER_REPLY_AI"; text: string; kind: ReplyKind; patienceDelta: number; angerDelta: number }
   | { type: "TIMEOUT" }
@@ -264,9 +264,16 @@ export function useTripliGame(
           text: m.text,
         }));
         const persona = getPersonaMeta(state.personaId).displayName;
+
+        const storedKey = typeof window !== "undefined" ? localStorage.getItem("hf_api_key") : null;
+        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        if (storedKey) {
+          headers["x-hf-key"] = storedKey;
+        }
+
         const res = await fetch("/api/hf", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers,
           body: JSON.stringify({
             persona,
             angerLevel: state.angerLevel,
@@ -282,7 +289,7 @@ export function useTripliGame(
             return;
           }
         }
-      } catch {}
+      } catch { }
       dispatch({ type: "PARTNER_MESSAGE" });
     }, delay);
     return () => window.clearTimeout(t);
@@ -301,9 +308,16 @@ export function useTripliGame(
             text: m.text,
           }));
           const persona = getPersonaMeta(state.personaId).displayName;
+
+          const storedKey = typeof window !== "undefined" ? localStorage.getItem("hf_api_key") : null;
+          const headers: Record<string, string> = { "Content-Type": "application/json" };
+          if (storedKey) {
+            headers["x-hf-key"] = storedKey;
+          }
+
           const res = await fetch("/api/hf/eval", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers,
             body: JSON.stringify({
               persona,
               angerLevel: state.angerLevel,
@@ -325,7 +339,7 @@ export function useTripliGame(
             });
             return;
           }
-        } catch {}
+        } catch { }
         dispatch({ type: "USER_REPLY", text, kind });
       })();
       return;

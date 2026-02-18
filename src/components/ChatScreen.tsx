@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ChatHeader } from "@/components/ChatHeader";
 import { ChatComposer } from "@/components/ChatComposer";
 import { GameOverScreen } from "@/components/GameOverScreen";
@@ -27,6 +27,19 @@ export function ChatScreen({
     restart,
   } = useTripliGame(personaId, difficultyId);
 
+  const [isWhatsappMode, setIsWhatsappMode] = useState(true);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("tps_whatsapp_mode");
+    if (saved === "false") setIsWhatsappMode(false);
+  }, []);
+
+  const toggleWhatsappMode = () => {
+    const next = !isWhatsappMode;
+    setIsWhatsappMode(next);
+    localStorage.setItem("tps_whatsapp_mode", String(next));
+  };
+
   const isLocked = state.phase !== "playing" || state.isPartnerTyping || !state.awaitingUserSince;
 
   const timeColor = useMemo(() => {
@@ -41,8 +54,14 @@ export function ChatScreen({
   }, [state.messages.length, state.isPartnerTyping]);
 
   return (
-    <div className="min-h-dvh">
-      <ChatHeader persona={persona} difficulty={difficulty} score={state.messageCount} />
+    <div className={`min-h-dvh ${isWhatsappMode ? "whatsapp-mode" : ""}`}>
+      <ChatHeader
+        persona={persona}
+        difficulty={difficulty}
+        score={state.messageCount}
+        isWhatsappMode={isWhatsappMode}
+        onToggleWhatsapp={toggleWhatsappMode}
+      />
 
       <div className="tps-chat-bg flex min-h-[calc(100dvh-56px)] flex-col">
         <div className="mx-auto w-full max-w-3xl px-4 pt-4">

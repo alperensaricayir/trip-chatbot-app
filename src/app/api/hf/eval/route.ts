@@ -3,8 +3,8 @@ import OpenAI from "openai";
 
 export const runtime = "nodejs";
 
-function getEnv() {
-  const token = process.env.HF_API_TOKEN || process.env.HF_TOKEN;
+function getEnv(customKey?: string | null) {
+  const token = customKey || process.env.HF_API_TOKEN || process.env.HF_TOKEN;
   const model = process.env.HF_MODEL_ID || "meta-llama/Llama-3.1-8B-Instruct";
   const timeoutMs = Number(process.env.HF_TIMEOUT_MS || "12000");
   return { token, model, timeoutMs };
@@ -12,7 +12,8 @@ function getEnv() {
 
 export async function POST(req: NextRequest) {
   try {
-    const env = getEnv();
+    const customKey = req.headers.get("x-hf-key");
+    const env = getEnv(customKey);
     if (!env.token) return NextResponse.json({ error: "no_token" }, { status: 400 });
     const client = new OpenAI({ apiKey: env.token, baseURL: "https://router.huggingface.co/v1" });
     const body = (await req.json()) as {

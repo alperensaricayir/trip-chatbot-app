@@ -1,12 +1,19 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
 export default function Home() {
   const [difficulty, setDifficulty] = useState<"easy" | "normal" | "hard">(
     "normal",
   );
+
+  const [hasKey, setHasKey] = useState(false);
+
+  useEffect(() => {
+    const key = localStorage.getItem("hf_api_key");
+    setHasKey(!!key);
+  }, []);
 
   const difficultyLabel =
     difficulty === "easy" ? "Kolay" : difficulty === "hard" ? "Zor" : "Orta";
@@ -37,33 +44,30 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => setDifficulty("easy")}
-                className={`rounded-xl border px-3 py-2 text-center text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${
-                  difficulty === "easy"
-                    ? "border-emerald-400/40 bg-emerald-500/15 text-zinc-50"
-                    : "border-white/10 bg-white/5 text-zinc-100 hover:bg-white/10"
-                }`}
+                className={`rounded-xl border px-3 py-2 text-center text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${difficulty === "easy"
+                  ? "border-emerald-400/40 bg-emerald-500/15 text-zinc-50"
+                  : "border-white/10 bg-white/5 text-zinc-100 hover:bg-white/10"
+                  }`}
               >
                 Kolay
               </button>
               <button
                 type="button"
                 onClick={() => setDifficulty("normal")}
-                className={`rounded-xl border px-3 py-2 text-center text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${
-                  difficulty === "normal"
-                    ? "border-emerald-400/40 bg-emerald-500/15 text-zinc-50"
-                    : "border-white/10 bg-white/5 text-zinc-100 hover:bg-white/10"
-                }`}
+                className={`rounded-xl border px-3 py-2 text-center text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${difficulty === "normal"
+                  ? "border-emerald-400/40 bg-emerald-500/15 text-zinc-50"
+                  : "border-white/10 bg-white/5 text-zinc-100 hover:bg-white/10"
+                  }`}
               >
                 Orta
               </button>
               <button
                 type="button"
                 onClick={() => setDifficulty("hard")}
-                className={`rounded-xl border px-3 py-2 text-center text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${
-                  difficulty === "hard"
-                    ? "border-emerald-400/40 bg-emerald-500/15 text-zinc-50"
-                    : "border-white/10 bg-white/5 text-zinc-100 hover:bg-white/10"
-                }`}
+                className={`rounded-xl border px-3 py-2 text-center text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${difficulty === "hard"
+                  ? "border-emerald-400/40 bg-emerald-500/15 text-zinc-50"
+                  : "border-white/10 bg-white/5 text-zinc-100 hover:bg-white/10"
+                  }`}
               >
                 Zor
               </button>
@@ -118,18 +122,36 @@ export default function Home() {
           </div>
         </div>
 
-        <footer className="pt-6 text-center text-[11px] leading-5 text-zinc-500">
-          Gerçek ilişki tavsiyesi içermez. Sadece eğlence amaçlıdır.
-          <div className="mt-2">
-            <Link
-              href="/scores"
-              className="text-zinc-400 underline underline-offset-4 hover:text-zinc-200"
-            >
-              En Yüksek Skor
-            </Link>
+        <footer className="py-6 text-center text-[11px] leading-5 text-zinc-500">
+          <p>Gerçek ilişki tavsiyesi içermez. Sadece eğlence amaçlıdır.</p>
+          <div className="mt-2 space-y-3">
+            <div>
+              <Link
+                href="/scores"
+                className="text-zinc-400 underline underline-offset-4 hover:text-zinc-200"
+              >
+                En Yüksek Skor
+              </Link>
+            </div>
+            <div>
+              <Link
+                href="/admin"
+                className={`inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${hasKey
+                  ? "bg-emerald-900/30 text-emerald-400 ring-1 ring-emerald-500/50 hover:bg-emerald-900/50"
+                  : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+                  }`}
+              >
+                API Configuration
+                {hasKey && (
+                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                  </svg>
+                )}
+              </Link>
+            </div>
           </div>
         </footer>
-      </div>
-    </main>
+      </div >
+    </main >
   );
 }

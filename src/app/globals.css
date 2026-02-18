@@ -44,3 +44,37 @@ body {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 999px;
 }
+
+/* WhatsApp Mode Styles */
+/* WhatsApp Mode Styles (Dark) */
+.whatsapp-mode .tps-chat-bg {
+  background-color: #0b141a;
+  background-image: url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png");
+  background-size: 400px;
+  opacity: 0.9;
+  /* Slightly dim the background pattern */
+}
+
+.whatsapp-mode .tps-header {
+  background-color: #202c33 !important;
+  backdrop-filter: none !important;
+  border-bottom: 1px solid #2f3b43 !important;
+}
+
+.whatsapp-mode .tps-message-partner {
+  background-color: #202c33 !important;
+  color: #e9edef !important;
+  border-radius: 0px 12px 12px 12px !important;
+  box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+}
+
+.whatsapp-mode .tps-message-user {
+  background-color: #005c4b !important;
+  color: #e9edef !important;
+  border-radius: 12px 0px 12px 12px !important;
+  box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+}
+
+.whatsapp-mode .tps-time {
+  color: #8696a0 !important;
+}
